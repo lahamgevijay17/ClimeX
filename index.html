@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClimeX - Weather Prediction System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">☁️</span>
+                <span class="logo-text">ClimeX</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#forecast" class="nav-link">Forecast</a></li>
+                <li><a href="#alerts" class="nav-link">Alerts</a></li>
+                <li><a href="#settings" class="nav-link">Settings</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="weather-animation">
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+            <div class="sun"></div>
+            <div class="rain-container">
+                <div class="raindrop"></div>
+                <div class="raindrop"></div>
+                <div class="raindrop"></div>
+                <div class="raindrop"></div>
+                <div class="raindrop"></div>
+                <div class="raindrop"></div>
+            </div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">ClimeX — Weather Prediction System</h1>
+            <p class="hero-subtitle">Real-Time Weather Forecasts &amp; AI Predictions</p>
+            <button class="btn-primary btn-large" id="viewForecastBtn">View Full Forecast</button>
+        </div>
+    </section>
+
+    <!-- Main Dashboard -->
+    <section id="forecast" class="dashboard-section">
+        <div class="container">
+            <!-- Prominent Location Detection Section -->
+            <div class="location-detection-section">
+                <div class="location-card">
+                    <div class="location-card-header">
+                        <h3>📍 YOUR LOCATION</h3>
+                    </div>
+                    <div class="location-display" id="locationDisplay">
+                        <div class="location-name" id="locationName">Nashik, Maharashtra, India</div>
+                        <div class="location-coordinates" id="locationCoordinates">
+                            <span>19.9975°N, 73.7898°E</span>
+                        </div>
+                        <div class="location-meta" id="locationMeta">
+                            <span class="location-accuracy" id="locationAccuracy">±50 meters</span>
+                            <span class="location-separator">•</span>
+                            <span class="location-timezone" id="locationTimezone">IST (UTC+5:30)</span>
+                        </div>
+                    </div>
+                    <div class="location-actions">
+                        <button class="btn-location-primary" id="usePreciseLocationBtn">
+                            <span class="btn-icon" id="locationBtnIcon">📍</span>
+                            <span id="locationBtnText">Use Precise Location</span>
+                        </button>
+                        <button class="btn-location-secondary" id="searchLocationBtn">
+                            <span class="btn-icon">🔍</span>
+                            <span>Search Location</span>
+                        </button>
+                    </div>
+                    <div class="location-status" id="locationStatus" style="display: none;">
+                        <span class="status-icon" id="statusIcon"></span>
+                        <span class="status-message" id="statusMessage"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location & Refresh -->
+            <div class="section-header">
+                <div class="location-bar">
+                    <div class="location-info" id="locationInfo">
+                        <span class="location-icon">📍</span>
+                        <span id="locationText">Nashik, Maharashtra, India</span>
+                    </div>
+                    <button class="btn-refresh" id="refreshBtn">🔄 Refresh</button>
+                </div>
+                <div class="last-updated" id="lastUpdated">Last updated: 2 minutes ago</div>
+            </div>
+
+            <!-- Current Weather Display -->
+            <div class="current-weather-card">
+                <div class="current-weather-main">
+                    <div class="weather-icon-large" id="weatherIconLarge">⛅</div>
+                    <div class="temperature-section">
+                        <div class="temperature-display">
+                            <span class="temperature" id="currentTemp">28</span>
+                            <span class="temp-unit">°C</span>
+                        </div>
+                        <div class="weather-condition" id="weatherCondition">Partly Cloudy</div>
+                        <div class="weather-description" id="weatherDescription">Scattered clouds with mild temperature</div>
+                    </div>
+                </div>
+                <div class="feels-like">
+                    <span class="feels-label">Feels like</span>
+                    <span class="feels-value" id="feelsLike">30°C</span>
+                </div>
+            </div>
+
+            <!-- Key Metrics Grid -->
+            <div class="metrics-grid" id="metricsGrid">
+                <!-- Metrics cards dynamically inserted -->
+            </div>
+
+            <!-- Hourly Forecast -->
+            <div class="section-title">
+                <h2>Hourly Forecast (24 Hours)</h2>
+            </div>
+            <div class="hourly-forecast-container">
+                <div class="hourly-scroll" id="hourlyScroll">
+                    <!-- Hourly cards dynamically inserted -->
+                </div>
+            </div>
+
+            <!-- 5-Day Forecast -->
+            <div class="section-title">
+                <h2>5-Day Forecast</h2>
+            </div>
+            <div class="five-day-forecast" id="fiveDayForecast">
+                <!-- 5-day cards dynamically inserted -->
+            </div>
+
+            <!-- Temperature & Precipitation Chart -->
+            <div class="section-title">
+                <h2>Hourly Temperature &amp; Precipitation</h2>
+            </div>
+            <div class="chart-card">
+                <div class="chart-container" style="height: 350px;">
+                    <canvas id="tempPrecipChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Detailed Weather Breakdown -->
+            <div class="section-title">
+                <h2>Detailed Weather Information</h2>
+            </div>
+            <div class="weather-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="wind">Wind</button>
+                    <button class="tab-btn" data-tab="precipitation">Precipitation</button>
+                    <button class="tab-btn" data-tab="pressure">Pressure</button>
+                    <button class="tab-btn" data-tab="air">Air Quality</button>
+                    <button class="tab-btn" data-tab="uv">UV &amp; Solar</button>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-panel active" id="wind-panel">
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <div class="detail-icon">🌬️</div>
+                                <div class="detail-label">Wind Speed</div>
+                                <div class="detail-value" id="windSpeed">15 km/h</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">🧭</div>
+                                <div class="detail-label">Wind Direction</div>
+                                <div class="detail-value" id="windDirection">SW (210°)</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">💨</div>
+                                <div class="detail-label">Wind Gusts</div>
+                                <div class="detail-value" id="windGusts">25 km/h</div>
+                            </div>
+                            <div class="detail-card compass-card">
+                                <div class="compass" id="compass">
+                                    <div class="compass-arrow" id="compassArrow"></div>
+                                    <div class="compass-direction">N</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-panel" id="precipitation-panel">
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <div class="detail-icon">🌧️</div>
+                                <div class="detail-label">Current Rainfall</div>
+                                <div class="detail-value" id="rainfall">0.5 mm</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">💧</div>
+                                <div class="detail-label">Probability</div>
+                                <div class="detail-value" id="rainProb">35%</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">🌊</div>
+                                <div class="detail-label">Expected (24h)</div>
+                                <div class="detail-value" id="expected24h">2.5 mm</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">📊</div>
+                                <div class="detail-label">Humidity</div>
+                                <div class="detail-value" id="humidityDetail">65%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-panel" id="pressure-panel">
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <div class="detail-icon">🌡️</div>
+                                <div class="detail-label">Current Pressure</div>
+                                <div class="detail-value" id="pressure">1013 hPa</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">📈</div>
+                                <div class="detail-label">Trend</div>
+                                <div class="detail-value" id="pressureTrend">Rising</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">⚡</div>
+                                <div class="detail-label">Change Rate</div>
+                                <div class="detail-value" id="pressureChange">+2 hPa/h</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">👁️</div>
+                                <div class="detail-label">Visibility</div>
+                                <div class="detail-value" id="visibility">10 km</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-panel" id="air-panel">
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <div class="detail-icon">🍃</div>
+                                <div class="detail-label">Air Quality Index</div>
+                                <div class="detail-value aqi-good" id="aqi">45 - Good</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">🔬</div>
+                                <div class="detail-label">PM2.5</div>
+                                <div class="detail-value" id="pm25">12 µg/m³</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">🔬</div>
+                                <div class="detail-label">PM10</div>
+                                <div class="detail-value" id="pm10">25 µg/m³</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">⚗️</div>
+                                <div class="detail-label">O3 / NO2 / SO2</div>
+                                <div class="detail-value" id="gases">45 / 15 / 5</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-panel" id="uv-panel">
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <div class="detail-icon">☀️</div>
+                                <div class="detail-label">UV Index</div>
+                                <div class="detail-value uv-high" id="uvIndex">6 - High</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">🧴</div>
+                                <div class="detail-label">Recommendation</div>
+                                <div class="detail-value small-text" id="uvRec">Use SPF 30+</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">💡</div>
+                                <div class="detail-label">Solar Radiation</div>
+                                <div class="detail-value" id="solarRad">650 W/m²</div>
+                            </div>
+                            <div class="detail-card">
+                                <div class="detail-icon">⏱️</div>
+                                <div class="detail-label">Sunshine Duration</div>
+                                <div class="detail-value" id="sunshineDur">7.5 hours</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Trends -->
+            <div class="section-title">
+                <h2>7-Day Weather Trends</h2>
+            </div>
+            <div class="chart-card">
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="weekTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Sunrise/Sunset & Moon Phase -->
+            <div class="sun-moon-grid">
+                <div class="sun-moon-card">
+                    <h3>☀️ Sunrise &amp; Sunset</h3>
+                    <div class="sun-times">
+                        <div class="sun-time">
+                            <span class="time-label">Sunrise</span>
+                            <span class="time-value" id="sunrise">06:30 AM</span>
+                        </div>
+                        <div class="sun-time">
+                            <span class="time-label">Sunset</span>
+                            <span class="time-value" id="sunset">05:45 PM</span>
+                        </div>
+                    </div>
+                    <div class="day-length">
+                        <span class="day-label">Day Length</span>
+                        <span class="day-value" id="dayLength">11h 15m</span>
+                    </div>
+                    <div class="sun-progress">
+                        <div class="sun-progress-bar" id="sunProgressBar"></div>
+                    </div>
+                </div>
+                <div class="sun-moon-card">
+                    <h3>🌙 Moon Phase &amp; Astronomy</h3>
+                    <div class="moon-display">
+                        <div class="moon-icon" id="moonIcon">🌔</div>
+                        <div class="moon-info">
+                            <div class="moon-phase" id="moonPhase">Waxing Gibbous</div>
+                            <div class="moon-illumination" id="moonIllumination">78% Illuminated</div>
+                        </div>
+                    </div>
+                    <div class="moon-times">
+                        <div class="moon-time">
+                            <span>Moonrise: <strong id="moonrise">18:30</strong></span>
+                        </div>
+                        <div class="moon-time">
+                            <span>Moonset: <strong id="moonset">07:15</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts Section -->
+            <div id="alerts" class="section-title">
+                <h2>⚠️ Weather Alerts &amp; Notices</h2>
+            </div>
+            <div class="alerts-container" id="alertsContainer">
+                <!-- Alerts dynamically inserted -->
+            </div>
+
+            <!-- Extended Forecast -->
+            <div class="section-title">
+                <h2>Extended Forecast (10 Days)</h2>
+            </div>
+            <div class="extended-forecast" id="extendedForecast">
+                <!-- Extended forecast items dynamically inserted -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Location Modal -->
+    <div class="modal" id="searchLocationModal">
+        <div class="modal-overlay" id="searchLocationOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="searchLocationClose">&times;</button>
+            <h2>Search Location</h2>
+            <div class="search-location-form">
+                <div class="form-group">
+                    <label>Search for any location in India</label>
+                    <input type="text" id="citySearchInput" class="form-control" placeholder="Type city, town, or village name... (e.g., Nashik, Manmad, Trimbak, Peth)" autocomplete="off">
+                    <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: var(--space-8);">Start typing to see suggestions. Works for small towns and villages too!</p>
+                </div>
+                <div class="quick-locations">
+                    <h4>Popular Cities (Quick Select):</h4>
+                    <div class="quick-location-grid">
+                        <button class="quick-location-btn" data-city="Nashik" data-lat="19.9975" data-lon="73.7898">🏙️ Nashik</button>
+                        <button class="quick-location-btn" data-city="Manmad" data-lat="19.7333" data-lon="73.8667">🏘️ Manmad</button>
+                        <button class="quick-location-btn" data-city="Trimbak" data-lat="19.9667" data-lon="73.9500">🏘️ Trimbak</button>
+                        <button class="quick-location-btn" data-city="Malegaon" data-lat="19.7628" data-lon="74.6331">🏘️ Malegaon</button>
+                        <button class="quick-location-btn" data-city="Mumbai" data-lat="19.0760" data-lon="72.8777">🏙️ Mumbai</button>
+                        <button class="quick-location-btn" data-city="Pune" data-lat="18.5204" data-lon="73.8567">🏙️ Pune</button>
+                        <button class="quick-location-btn" data-city="Aurangabad" data-lat="19.8762" data-lon="75.3433">🏙️ Aurangabad</button>
+                        <button class="quick-location-btn" data-city="Nagpur" data-lat="21.1458" data-lon="79.0882">🏙️ Nagpur</button>
+                        <button class="quick-location-btn" data-city="Bengaluru" data-lat="12.9716" data-lon="77.5946">🏙️ Bengaluru</button>
+                        <button class="quick-location-btn" data-city="Delhi" data-lat="28.7041" data-lon="77.1025">🏙️ Delhi</button>
+                        <button class="quick-location-btn" data-city="Hyderabad" data-lat="17.3850" data-lon="78.4867">🏙️ Hyderabad</button>
+                        <button class="quick-location-btn" data-city="Chennai" data-lat="13.0827" data-lon="80.2707">🏙️ Chennai</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-overlay" id="settingsOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="settingsClose">&times;</button>
+            <h2>Settings</h2>
+            <div class="settings-form">
+                <div class="setting-item">
+                    <label>Temperature Unit</label>
+                    <select id="tempUnit" class="form-control">
+                        <option value="celsius">Celsius (°C)</option>
+                        <option value="fahrenheit">Fahrenheit (°F)</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label>Time Format</label>
+                    <select id="timeFormat" class="form-control">
+                        <option value="24h">24-Hour</option>
+                        <option value="12h">12-Hour</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label>Location</label>
+                    <input type="text" id="locationInput" class="form-control" placeholder="Enter city name" value="Nashik, Maharashtra">
+                </div>
+                <button class="btn-primary btn-full-width" id="saveSettings">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-icon">☁️</span>
+                    <span class="logo-text">ClimeX</span>
+                </div>
+                <p>&copy; 2025 ClimeX Weather Prediction System. All rights reserved.</p>
+                <p class="footer-note">Last data update: <span id="footerUpdate">Just now</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
